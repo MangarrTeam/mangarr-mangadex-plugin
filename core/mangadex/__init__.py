@@ -1,4 +1,4 @@
-from plugins.base import MangaPluginBase, Formats, AgeRating
+from plugins.base import MangaPluginBase, Formats, AgeRating, NO_THUMBNAIL_URL
 import sys
 import requests
 import json
@@ -10,7 +10,7 @@ class MangaDex(MangaPluginBase):
     base_url = "https://mangadex.org/"
     api_url = f"https://api.mangadex.org/"
 
-    def search_manga(self, query, language=None):
+    def search_manga(self, query, nsfw=False, language=None):
         logger.debug(f'Searching for "{query}"')
         limit = 100
         offset = 0
@@ -24,7 +24,7 @@ class MangaDex(MangaPluginBase):
                                             "title": query,
                                             "limit": limit,
                                             "offset": offset,
-                                            "contentRating[]": ["safe", "suggestive", "erotica", "pornographic"],
+                                            "contentRating[]": ["safe", "suggestive", "erotica", "pornographic"] if nsfw else ["safe"],
                                             "includes[]": ["manga", "cover_art", "author", "artist", "tag"],
                                         },
                                         timeout=10
@@ -102,7 +102,7 @@ class MangaDex(MangaPluginBase):
                         
 
                         id = result_data.get("id")
-                        cover_url = "/uploads/static/no_thumbnail.png"
+                        cover_url = NO_THUMBNAIL_URL
                         if id is not None:
                             manga_dict["id"] = id
                             manga_dict["url"] = f"{self.base_url}title/{id}"
@@ -112,7 +112,7 @@ class MangaDex(MangaPluginBase):
                                     if relationship.get("type") == "cover_art":
                                         cover_fileName = relationship.get("attributes", {}).get("fileName")
                                         if relationships is not None:
-                                            cover_url = f"https://uploads.mangadex.org/covers/{id}/{cover_fileName}"
+                                            cover_url = f"https://uploads.mangadex.org/covers/{id}/{cover_fileName}.256.jpg"
                                         break
 
                             manga_dict["cover"] = cover_url
