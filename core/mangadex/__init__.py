@@ -257,7 +257,8 @@ class MangaDex(MangaPluginBase):
                         chapter["volume_number"] = volume_number
                     chapter["release_date"] = datetime.strptime(attributes.get("publishAt"), "%Y-%m-%dT%H:%M:%S%z")
                     chapter["page_count"] = attributes.get("pages")
-                    chapter["url"] = f'https://api.mangadex.org/at-home/server/{chapter_id}?forcePort443=false'
+                    chapter["source_url"] = f'{self.base_url}/chapter/{chapter_id}'
+                    chapter["url"] = f'{self.api_url}/at-home/server/{chapter_id}?forcePort443=false'
 
                     chapterData.append(chapter)
 
