@@ -259,6 +259,7 @@ class MangaDex(MangaPluginBase):
                     chapter["page_count"] = attributes.get("pages")
                     chapter["source_url"] = f'{self.base_url}/chapter/{chapter_id}'
                     chapter["url"] = f'{self.api_url}/at-home/server/{chapter_id}?forcePort443=false'
+                    chapter["isbn"] = chapter_id
 
                     chapterData.append(chapter)
 
